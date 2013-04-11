@@ -21,8 +21,9 @@
     <!--  Отображение узла Segment  -->
     <HierarchicalDataTemplate x:Key="SegmentTemplate" DataType="model:Segment">
         <StackPanel Orientation="Horizontal">
-            <Image Source="../segment.png" Margin="0 2 5 2" VerticalAlignment="Center" />
-            <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center"/>
+            <Image Source="../segment.png" Margin="0 2" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Path=Type}" Foreground="{Binding Path=TypeColor}" VerticalAlignment="Center" Margin="5 0 0 0"/>
+            <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center" Margin="5 0 0 0"/>
         </StackPanel>
     </HierarchicalDataTemplate>
     

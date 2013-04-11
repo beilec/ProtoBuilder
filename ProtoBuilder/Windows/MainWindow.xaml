@@ -71,8 +71,39 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <ListBox x:Name="LbSegments" ItemTemplate="{StaticResource SegmentTemplate}" Margin="0 0 0 5"/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center">
+                                <Button x:Name="BtnAddSegment" Padding="2 -4" Height="21" ToolTip="Add segment in packet">
+                                    <Image Source="../Resources/add.png" Height="16"/>
+                                </Button>
+                                <Button x:Name="BtnRemoveSegment" Padding="2 -4" Height="21" ToolTip="Remove segment from packet" Margin="1 0">
+                                    <Image Source="../Resources/remove.png" Height="16"/>
+                                </Button>
+                            </StackPanel>
+                            <ListBox x:Name="LbSegments" ItemTemplate="{StaticResource SegmentTemplate}" Margin="0 0 0 5" Grid.Row="1"/>
+                        </Grid>
                         <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Bottom" ResizeDirection="Rows" Height="5" Background="{StaticResource SplitterBackground}"/>
+                        <ContentControl x:Name="CcPacketEditor" Grid.Row="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </ContentControl>
                     </Grid>
                 </TabItem>
             </TabControl>
