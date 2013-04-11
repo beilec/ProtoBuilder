@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:model="clr-namespace:ProtoBuilder.Model">
+
+    <!--  Отображение узла Protocol  -->
+    <HierarchicalDataTemplate x:Key="ProtocolTemplate" DataType="model:Protocol">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="../protocol.png" Margin="0 2 5 2" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center"/>
+        </StackPanel>
+    </HierarchicalDataTemplate>
+    
+    <!--  Отображение узла Packet  -->
+    <HierarchicalDataTemplate x:Key="PacketTemplate" DataType="model:Packet">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="../packet.png" Margin="0 2 5 2" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center"/>
+        </StackPanel>
+    </HierarchicalDataTemplate>
+
+    <!--  Отображение узла Segment  -->
+    <HierarchicalDataTemplate x:Key="SegmentTemplate" DataType="model:Segment">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="../segment.png" Margin="0 2 5 2" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center"/>
+        </StackPanel>
+    </HierarchicalDataTemplate>
+    
+</ResourceDictionary>

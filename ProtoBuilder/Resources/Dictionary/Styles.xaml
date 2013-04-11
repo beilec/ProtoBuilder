@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <RadialGradientBrush x:Key="SplitterBackground">
+        <GradientStop Color="#FF767676" Offset="0.5"/>
+        <GradientStop Color="LightGray"/>
+        <GradientStop Color="LightGray" Offset="1"/>
+    </RadialGradientBrush>
+    <LinearGradientBrush x:Key="Flat3DBorderBrush"
+                        StartPoint="0.499,0" EndPoint="0.501,1">
+        <GradientStop Color="#FFF" Offset="0" />
+        <GradientStop Color="#DDD" Offset="0.01" />
+        <GradientStop Color="#AAA" Offset="0.99" />
+        <GradientStop Color="#888" Offset="1" />
+    </LinearGradientBrush>
+</ResourceDictionary>
