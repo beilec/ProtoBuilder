@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ProtoBuilder.Model {
@@ -11,6 +12,9 @@ namespace ProtoBuilder.Model {
         public List<Segment> Segments { get; set; }
         public uint Size {
             get { return Segments == null ? 0 : (uint) Segments.Sum(t => t.Size); }
+        }
+        public static List<PacketType> GetPacketTypes() {
+            return Enum.GetValues(typeof (PacketType)).Cast<PacketType>().ToList();
         }
     }
 

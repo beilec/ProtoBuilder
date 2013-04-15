@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Threading;
 using ProtoBuilder.Controllers;
 using ProtoBuilder.Model;
 
@@ -11,6 +15,10 @@ namespace ProtoBuilder.Windows {
     /// </summary>
     public partial class MainWindow {
         public ProtocolController ProtocolController { get; set; }
+        private Protocol CurrentProtocol { get; set; }
+        private Packet CurrentPacket { get; set; }
+        private Segment CurrentSegment { get; set; }
+        private DispatcherTimer SegmentListRefreshTimer { get; set; }
 
         public MainWindow() {
             InitializeComponent();
@@ -18,9 +26,142 @@ namespace ProtoBuilder.Windows {
             GenTestData();
 
             Loaded += OnLoaded;
-
+            
             CbProtocols.SelectionChanged += CbProtocolsOnSelectionChanged;
             LbPackets.SelectionChanged += LbPacketsOnSelectionChanged;
+            LbSegments.SelectionChanged += LbSegmentsOnSelectionChanged;
+            LbPackets.MouseDoubleClick += LbPacketsOnMouseDoubleClick;
+            LbPackets.KeyUp += LbPacketsOnKeyUp;
+
+            //  Говно-код, но иначе не получается получить доступ
+            //  к ComboBox внутри ContentControl.ContentTemplate
+            //  для инициализации SelectedItem
+            CbDataType.ItemsSource = Segment.GetDataTypes();
+            TxtSegmentName.TextChanged += TxtSegmentNameOnTextChanged;
+            TxtSegmentName.LostFocus += TxtSegmentNameOnLostFocus;
+            TxtSegmentDesc.TextChanged += TxtSegmentDescOnTextChanged;
+            TxtSegmentDesc.LostFocus += TxtSegmentDescOnLostFocus;
+            CbDataType.SelectionChanged += CbDataTypeOnSelectionChanged;
+            CbDataType.DropDownClosed += CbDataTypeOnDropDownClosed;
+            TxtSegmentSize.TextChanged += TxtSizeOnTextChanged;
+            TxtSegmentSize.LostFocus += TxtSegmentSizeOnLostFocus;
+            InitTimer();
+            //  Конец говно-кода
+        }
+
+        private void LbPacketsOnKeyUp(object sender, KeyEventArgs e) {
+            if (LbPackets.SelectedIndex > -1 && e.Key == Key.F2)
+                EditPacket();
+        }
+
+        private void LbPacketsOnMouseDoubleClick(object sender, MouseButtonEventArgs e) {
+            if (LbPackets.SelectedIndex > -1)
+                EditPacket();
+        }
+
+        private void EditPacket() {
+            var win = new PacketEditWindow(CurrentPacket);
+            var showDialog = win.ShowDialog();
+            if (showDialog == null || !((bool) showDialog)) return;
+            var index = LbPackets.SelectedIndex;
+            LbPackets.ItemsSource = null;
+            LbPackets.ItemsSource = CurrentProtocol.Packets;
+            LbPackets.SelectedIndex = index;
+        }
+
+        private void CbDataTypeOnDropDownClosed(object sender, EventArgs eventArgs) {
+            RefreshSegmentList();
+        }
+
+        private void TxtSegmentSizeOnLostFocus(object sender, RoutedEventArgs routedEventArgs) {
+            RefreshSegmentList();
+        }
+
+        private void TxtSegmentDescOnLostFocus(object sender, RoutedEventArgs routedEventArgs) {
+            RefreshSegmentList();
+        }
+
+        private void TxtSegmentNameOnLostFocus(object sender, RoutedEventArgs routedEventArgs) {
+            RefreshSegmentList();
+        }
+
+        private void InitTimer() {
+            SegmentListRefreshTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 100) };
+            SegmentListRefreshTimer.Tick += SegmentListRefreshTimerTick;
+            SegmentListRefreshTimer.Stop();
+        }
+
+        private void SegmentListRefreshTimerTick(object sender, EventArgs e) {
+            SegmentListRefreshTimer.Stop();
+            var index = LbSegments.SelectedIndex;
+            LbSegments.ItemsSource = null;
+            LbSegments.ItemsSource = CurrentPacket.Segments;
+            LbSegments.SelectedIndex = index;
+        }
+
+        private void CbDataTypeOnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (CbDataType.SelectedIndex == -1) return;
+            CurrentSegment.Type = (DataTypeView) CbDataType.SelectedItem;
+            var fixedSize = DataTypeView.SizeOfType(CurrentSegment.Type.Type);
+            if (fixedSize > 0) {
+                CurrentSegment.Size = fixedSize;
+                TxtSegmentSize.Text = CurrentSegment.Size.ToString(CultureInfo.InvariantCulture);
+                TxtSegmentSize.IsEnabled = false;
+            }
+            else {
+                TxtSegmentSize.IsEnabled = true;
+            }
+        }
+
+        private void TxtSizeOnTextChanged(object sender, TextChangedEventArgs e) {
+            if (LbSegments.SelectedItems.Count == 0) return;
+
+            int intVal;
+            int.TryParse(TxtSegmentSize.Text, out intVal);
+            CurrentSegment.Size = (uint) intVal;
+        }
+
+        private void TxtSegmentDescOnTextChanged(object sender, TextChangedEventArgs e) {
+            if (LbSegments.SelectedItems.Count == 0) return;
+
+            CurrentSegment.Description = TxtSegmentDesc.Text;
+        }
+
+        private void TxtSegmentNameOnTextChanged(object sender, TextChangedEventArgs e) {
+            if (LbSegments.SelectedItems.Count == 0) return;
+
+            CurrentSegment.Name = TxtSegmentName.Text;
+        }
+
+        private void RefreshSegmentList() {
+            //SegmentListRefreshTimer.Start();
+            var index = LbSegments.SelectedIndex;
+            LbSegments.ItemsSource = null;
+            LbSegments.ItemsSource = CurrentPacket.Segments;
+            LbSegments.SelectedIndex = index;
+        }
+
+        private void LbSegmentsOnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (e.AddedItems.Count > 0) {
+                CurrentSegment = (Segment) e.AddedItems[0];
+                TxtSegmentName.Text = CurrentSegment.Name;
+                TxtSegmentDesc.Text = CurrentSegment.Description;
+                var i = -1;
+                foreach (DataTypeView item in CbDataType.ItemsSource) {
+                    i++;
+                    if (item.Type != CurrentSegment.Type.Type) continue;
+                    CbDataType.SelectedIndex = i;
+                    break;
+                }
+                TxtSegmentSize.Text = CurrentSegment.Size.ToString(CultureInfo.InvariantCulture);
+                BtnRemoveSegment.IsEnabled = true;
+            } else {
+                TxtSegmentName.Text = "";
+                TxtSegmentDesc.Text = "";
+                CbDataType.SelectedIndex = -1;
+                TxtSegmentSize.Text = "";
+                BtnRemoveSegment.IsEnabled = false;
+            }
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e) {
@@ -29,24 +170,30 @@ namespace ProtoBuilder.Windows {
 
         private void CbProtocolsOnSelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (e.AddedItems.Count == 1) {
-                var protocol = (Protocol) e.AddedItems[0];
+                CurrentProtocol = (Protocol) e.AddedItems[0];
                 LbPackets.ItemsSource = null;
-                LbPackets.ItemsSource = protocol.Packets;
+                LbPackets.ItemsSource = CurrentProtocol.Packets;
                 LbSegments.ItemsSource = null;
+                BtnAddPacket.IsEnabled = true;
             }
             else {
                 LbPackets.ItemsSource = null;
+                BtnAddPacket.IsEnabled = false;
             }
         }
 
         private void LbPacketsOnSelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (e.AddedItems.Count == 1) {
-                var packet = (Packet) e.AddedItems[0];
+            if (e.AddedItems.Count > 0) {
+                CurrentPacket = (Packet) e.AddedItems[0];
                 LbSegments.ItemsSource = null;
-                LbSegments.ItemsSource = packet.Segments;
+                LbSegments.ItemsSource = CurrentPacket.Segments.OrderBy(t=>t.OrderId);
+                BtnAddSegment.IsEnabled = true;
+                BtnRemovePacket.IsEnabled = true;
             }
             else {
                 LbSegments.ItemsSource = null;
+                BtnAddSegment.IsEnabled = false;
+                BtnRemovePacket.IsEnabled = false;
             }
         }
 
@@ -58,67 +205,67 @@ namespace ProtoBuilder.Windows {
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент byte"),
-                                                                     Type = DataType.Byte,
+                                                                     Type = new DataTypeView { Type = DataType.Byte },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент Int16"),
-                                                                     Type = DataType.Int16,
+                                                                     Type = new DataTypeView { Type = DataType.Int16 },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент Int32"),
-                                                                     Type = DataType.Int32,
+                                                                     Type = new DataTypeView { Type = DataType.Int32 },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент Int64"),
-                                                                     Type = DataType.Int64,
+                                                                     Type = new DataTypeView { Type = DataType.Int64 },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент UInt16"),
-                                                                     Type = DataType.UInt16,
+                                                                     Type = new DataTypeView { Type = DataType.UInt16 },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент UInt32"),
-                                                                     Type = DataType.UInt32,
+                                                                     Type = new DataTypeView { Type = DataType.UInt32 },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент UInt64"),
-                                                                     Type = DataType.UInt64,
+                                                                     Type = new DataTypeView { Type = DataType.UInt64 },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент Double"),
-                                                                     Type = DataType.Double,
+                                                                     Type = new DataTypeView { Type = DataType.Double },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент DateTime"),
-                                                                     Type = DataType.DateTime,
+                                                                     Type = new DataTypeView { Type = DataType.DateTime },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент String"),
-                                                                     Type = DataType.String,
+                                                                     Type = new DataTypeView { Type = DataType.String },
                                                                      Size = 4
                                                                  },
                                                      new Segment {
                                                                      OrderId = 0,
                                                                      Name = string.Format("Сегмент BytesArray"),
-                                                                     Type = DataType.Bytes,
+                                                                     Type = new DataTypeView { Type = DataType.Bytes },
                                                                      Size = 42
                                                                  },
                                                  };
@@ -136,6 +283,33 @@ namespace ProtoBuilder.Windows {
                 Packets = packets
             });
             ProtocolController.Protocols = protocols;
+        }
+
+        private void BtnAddSegment_OnClick(object sender, RoutedEventArgs e) {
+            ProtocolController.AddSegment(CurrentPacket);
+            CurrentPacket = ProtocolController.Protocols.First(t => t == CurrentProtocol).Packets.First(p => p == CurrentPacket);
+            LbSegments.ItemsSource = null;
+            LbSegments.ItemsSource = CurrentPacket.Segments;
+            LbSegments.SelectedIndex = CurrentPacket.Segments.Count - 1;
+        }
+
+        private void BtnRemoveSegment_OnClick(object sender, RoutedEventArgs e) {
+            foreach (Segment item in LbSegments.SelectedItems) {
+                CurrentPacket.Segments.Remove(item);
+            }
+            LbSegments.ItemsSource = null;
+            LbSegments.ItemsSource = CurrentPacket.Segments;
+        }
+
+        private void BtnAddPacket_OnClick(object sender, RoutedEventArgs e) {
+            ProtocolController.AddPacket(CurrentProtocol);
+            LbPackets.ItemsSource = null;
+            LbPackets.ItemsSource = CurrentProtocol.Packets;
+            LbPackets.SelectedIndex = CurrentProtocol.Packets.Count - 1;
+        }
+
+        private void BtnRemovePacket_OnClick(object sender, RoutedEventArgs e) {
+            
         }
     }
 }

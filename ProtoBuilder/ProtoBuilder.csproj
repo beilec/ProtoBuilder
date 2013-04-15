@@ -60,6 +60,9 @@
     </ApplicationDefinition>
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\ProtocolController.cs" />
+    <Compile Include="Windows\PacketEditWindow.xaml.cs">
+      <DependentUpon>PacketEditWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Resources\Dictionary\DataTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -76,6 +79,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\DataTypeView.cs" />
     <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\Packet.cs" />
     <Compile Include="Model\Protocol.cs" />
@@ -84,6 +88,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\PacketEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

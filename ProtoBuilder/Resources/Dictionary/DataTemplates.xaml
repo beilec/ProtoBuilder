@@ -22,9 +22,15 @@
     <HierarchicalDataTemplate x:Key="SegmentTemplate" DataType="model:Segment">
         <StackPanel Orientation="Horizontal">
             <Image Source="../segment.png" Margin="0 2" VerticalAlignment="Center" />
-            <TextBlock Text="{Binding Path=Type}" Foreground="{Binding Path=TypeColor}" VerticalAlignment="Center" Margin="5 0 0 0"/>
+            <TextBlock Text="{Binding Path=Type.Type}" Foreground="{Binding Path=Type.TypeColor}" VerticalAlignment="Center" Margin="5 0 0 0"/>
             <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center" Margin="5 0 0 0"/>
         </StackPanel>
     </HierarchicalDataTemplate>
-    
+
+    <!--  Отображение элемента DataType  -->
+    <DataTemplate x:Key="DataTypeTemplate" DataType="model:DataTypeView">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Path=Type}" Foreground="{Binding Path=TypeColor}" VerticalAlignment="Center" Margin="5 0 0 0"/>
+        </StackPanel>
+    </DataTemplate>
 </ResourceDictionary>
