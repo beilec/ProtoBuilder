@@ -19,11 +19,12 @@ namespace ProtoBuilder.Windows {
         private Packet CurrentPacket { get; set; }
         private Segment CurrentSegment { get; set; }
         private DispatcherTimer SegmentListRefreshTimer { get; set; }
+        public ListBox DragSource { get; protected set; }
 
         public MainWindow() {
             InitializeComponent();
             ProtocolController = new ProtocolController();
-            GenTestData();
+            //GenTestData();
 
             Loaded += OnLoaded;
             
@@ -45,8 +46,13 @@ namespace ProtoBuilder.Windows {
             CbDataType.DropDownClosed += CbDataTypeOnDropDownClosed;
             TxtSegmentSize.TextChanged += TxtSizeOnTextChanged;
             TxtSegmentSize.LostFocus += TxtSegmentSizeOnLostFocus;
+            CbPacketType.SelectionChanged += CbPacketTypeOnSelectionChanged;
             InitTimer();
             //  Конец говно-кода
+        }
+
+        private void CbPacketTypeOnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            CurrentPacket.PacketType = (PacketType) CbPacketType.SelectedItem;
         }
 
         private void LbPacketsOnKeyUp(object sender, KeyEventArgs e) {
@@ -134,10 +140,10 @@ namespace ProtoBuilder.Windows {
         }
 
         private void RefreshSegmentList() {
-            //SegmentListRefreshTimer.Start();
+            if (CurrentPacket == null) return;
             var index = LbSegments.SelectedIndex;
             LbSegments.ItemsSource = null;
-            LbSegments.ItemsSource = CurrentPacket.Segments;
+            LbSegments.ItemsSource = CurrentPacket.Segments.OrderBy(t=>t.OrderId);
             LbSegments.SelectedIndex = index;
         }
 
@@ -155,12 +161,16 @@ namespace ProtoBuilder.Windows {
                 }
                 TxtSegmentSize.Text = CurrentSegment.Size.ToString(CultureInfo.InvariantCulture);
                 BtnRemoveSegment.IsEnabled = true;
+                BtnSegmentPrevPosition.IsEnabled = true;
+                BtnSegmentNextPosition.IsEnabled = true;
             } else {
                 TxtSegmentName.Text = "";
                 TxtSegmentDesc.Text = "";
                 CbDataType.SelectedIndex = -1;
                 TxtSegmentSize.Text = "";
                 BtnRemoveSegment.IsEnabled = false;
+                BtnSegmentPrevPosition.IsEnabled = false;
+                BtnSegmentNextPosition.IsEnabled = false;
             }
         }
 
@@ -172,19 +182,33 @@ namespace ProtoBuilder.Windows {
             if (e.AddedItems.Count == 1) {
                 CurrentProtocol = (Protocol) e.AddedItems[0];
                 LbPackets.ItemsSource = null;
-                LbPackets.ItemsSource = CurrentProtocol.Packets;
+                LbPackets.ItemsSource = CurrentProtocol.Packets.OrderBy(t=>t.Name);
                 LbSegments.ItemsSource = null;
                 BtnAddPacket.IsEnabled = true;
+                BtnEditProtocol.IsEnabled = true;
+                BtnRemoveProtocol.IsEnabled = true;
             }
             else {
                 LbPackets.ItemsSource = null;
                 BtnAddPacket.IsEnabled = false;
+                BtnEditProtocol.IsEnabled = false;
+                BtnRemoveProtocol.IsEnabled = false;
             }
         }
 
         private void LbPacketsOnSelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (e.AddedItems.Count > 0) {
                 CurrentPacket = (Packet) e.AddedItems[0];
+                RecalcPacketSize();
+                CcPacket.Content = CurrentPacket;
+                CbPacketType.ItemsSource = Packet.GetPacketTypes();
+                var i = -1;
+                foreach (var item in Packet.GetPacketTypes()) {
+                    i++;
+                    if (item != CurrentPacket.PacketType) continue;
+                    CbPacketType.SelectedIndex = i;
+                    break;
+                }
                 LbSegments.ItemsSource = null;
                 LbSegments.ItemsSource = CurrentPacket.Segments.OrderBy(t=>t.OrderId);
                 BtnAddSegment.IsEnabled = true;
@@ -195,6 +219,11 @@ namespace ProtoBuilder.Windows {
                 BtnAddSegment.IsEnabled = false;
                 BtnRemovePacket.IsEnabled = false;
             }
+        }
+
+        private void RecalcPacketSize() {
+            if (CurrentPacket == null) return;
+            TxtPacketSize.Text = CurrentPacket.Size.ToString(CultureInfo.InvariantCulture);
         }
 
         private void GenTestData() {
@@ -291,6 +320,7 @@ namespace ProtoBuilder.Windows {
             LbSegments.ItemsSource = null;
             LbSegments.ItemsSource = CurrentPacket.Segments;
             LbSegments.SelectedIndex = CurrentPacket.Segments.Count - 1;
+            RecalcPacketSize();
         }
 
         private void BtnRemoveSegment_OnClick(object sender, RoutedEventArgs e) {
@@ -299,17 +329,81 @@ namespace ProtoBuilder.Windows {
             }
             LbSegments.ItemsSource = null;
             LbSegments.ItemsSource = CurrentPacket.Segments;
+            RecalcPacketSize();
         }
 
         private void BtnAddPacket_OnClick(object sender, RoutedEventArgs e) {
             ProtocolController.AddPacket(CurrentProtocol);
             LbPackets.ItemsSource = null;
             LbPackets.ItemsSource = CurrentProtocol.Packets;
-            LbPackets.SelectedIndex = CurrentProtocol.Packets.Count - 1;
+            if (CurrentProtocol.Packets != null)
+                LbPackets.SelectedIndex = CurrentProtocol.Packets.Count - 1;
         }
 
         private void BtnRemovePacket_OnClick(object sender, RoutedEventArgs e) {
-            
+            foreach (Packet item in LbPackets.SelectedItems) {
+                CurrentProtocol.Packets.Remove(item);
+            }
+            LbPackets.ItemsSource = null;
+            LbPackets.ItemsSource = CurrentProtocol.Packets;
+        }
+
+        private void BtnRecalcPacketSize_OnClick(object sender, RoutedEventArgs e) {
+            RecalcPacketSize();
+        }
+
+        private void TxtSegmentSize_OnTextChanged(object sender, TextChangedEventArgs e) {
+            RecalcPacketSize();
+        }
+
+        private void BtnSegmentPrevPosition_OnClick(object sender, RoutedEventArgs e) {
+            var index = CurrentPacket.MoveSegment2PrevPosition(CurrentSegment);
+            LbSegments.ItemsSource = null;
+            LbSegments.ItemsSource = CurrentPacket.Segments.OrderBy(t => t.OrderId);
+            LbSegments.SelectedIndex = index;
+        }
+
+        private void BtnSegmentNextPosition_OnClick(object sender, RoutedEventArgs e) {
+            var index = CurrentPacket.MoveSegment2NextPosition(CurrentSegment);
+            LbSegments.ItemsSource = null;
+            LbSegments.ItemsSource = CurrentPacket.Segments.OrderBy(t => t.OrderId);
+            LbSegments.SelectedIndex = index;
+        }
+
+        private void BtnCreateProtocol_OnClick(object sender, RoutedEventArgs e) {
+            var protocolsCount = CbProtocols.Items.Count;
+            ProtocolController.CreateProtocol();
+            if (CbProtocols.Items.Count <= protocolsCount) return;
+            CbProtocols.ItemsSource = null;
+            CbProtocols.ItemsSource = ProtocolController.Protocols;
+            CbProtocols.SelectedIndex = CbProtocols.Items.Count - 1;
+        }
+
+        private void BtnEditProtocol_OnClick(object sender, RoutedEventArgs e) {
+            ProtocolController.ShowEditProtocolWindow(CurrentProtocol);
+        }
+
+        private void BtnSaveProtocols_OnClick(object sender, RoutedEventArgs e) {
+            ProtocolController.SaveProtocols(ProtocolController);
+        }
+
+        private void BtnLoadProtocols_OnClick(object sender, RoutedEventArgs e) {
+            var protocolController = ProtocolController.LoadProtocols();
+            if (protocolController == null) return;
+            ProtocolController = protocolController;
+            CbProtocols.ItemsSource = ProtocolController.Protocols;
+            if (CbProtocols.Items.Count > 0)
+                CbProtocols.SelectedIndex = 0;
+        }
+
+        private void BtnRemoveProtocol_OnClick(object sender, RoutedEventArgs e) {
+            if (CurrentProtocol == null) return;
+            if (MessageBox.Show(string.Format(@"Удалить протокол {0}?", CurrentProtocol.Name), "Удаление протокола", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) return;
+            ProtocolController.Protocols.Remove(CurrentProtocol);
+            CbProtocols.ItemsSource = null;
+            CbProtocols.ItemsSource = ProtocolController.Protocols;
+            if (CbProtocols.Items.Count > 0)
+                CbProtocols.SelectedIndex = 0;
         }
     }
 }

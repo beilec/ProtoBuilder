@@ -1,0 +1,73 @@
+﻿<Window x:Class="ProtoBuilder.Windows.ProtocolPropertiesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Protocol properties"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="ToolWindow"
+        Background="LightGray">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Name" HorizontalAlignment="Right" Margin="5 2" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=Name}" Grid.Column="1" Margin="5 2" VerticalAlignment="Center"/>
+            <TextBlock Text="Concurent connections" HorizontalAlignment="Right" Margin="5 2" Grid.Row="1" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=ConcurentConnections}" Grid.Column="1" Margin="5 2" Grid.Row="1" VerticalAlignment="Center"/>
+            <TextBlock Text="Port" HorizontalAlignment="Right" Margin="5 2" Grid.Row="2" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=Port}" Grid.Column="1" Margin="5 2" Grid.Row="2" VerticalAlignment="Center"/>
+            <TextBlock Text="Server listener timeout" HorizontalAlignment="Right" Margin="5 2" Grid.Row="3" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=ServerListenerTimeout}" Grid.Column="1" Margin="5 2" Grid.Row="3" VerticalAlignment="Center"/>
+            <StackPanel Grid.ColumnSpan="2" Grid.Row="4" HorizontalAlignment="Right">
+                <CheckBox Content="No timeout" IsChecked="{Binding Path=NoTimeout}" />
+            </StackPanel>
+            <TextBlock Text="Server send timeout" HorizontalAlignment="Right" Margin="5 2" Grid.Row="5" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=ServerSendTimeout}" Grid.Column="1" Margin="5 2" Grid.Row="5" VerticalAlignment="Center"/>
+            <TextBlock Text="Server receive timeout" HorizontalAlignment="Right" Margin="5 2" Grid.Row="6" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=ServerReceiveTimeout}" Grid.Column="1" Margin="5 2" Grid.Row="6" VerticalAlignment="Center"/>
+            <TextBlock Text="Server keep alive timeout" HorizontalAlignment="Right" Margin="5 2" Grid.Row="7" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=ServerKeepAliveTimeout}" Grid.Column="1" Margin="5 2" Grid.Row="7" VerticalAlignment="Center"/>
+            <TextBlock Text="Client send timeout" HorizontalAlignment="Right" Margin="5 2" Grid.Row="8" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=ClientSendTimeout}" Grid.Column="1" Margin="5 2" Grid.Row="8" VerticalAlignment="Center"/>
+            <TextBlock Text="Client receive timeout" HorizontalAlignment="Right" Margin="5 2" Grid.Row="9" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Path=ClientReceiveTimeout}" Grid.Column="1" Margin="5 2" Grid.Row="9" VerticalAlignment="Center"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="BtnOk" HorizontalAlignment="Right" Padding="5 2" Margin="5"
+                    Click="BtnOk_OnClick">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="../Resources/ok.png" Height="16" VerticalAlignment="Center" Margin="5 2" />
+                    <TextBlock Text="OK" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="BtnCancel" HorizontalAlignment="Right" Padding="5 2" Grid.Column="1" Margin="5"
+                    Click="BtnCancel_OnClick">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="../Resources/cancel.png" Height="16" VerticalAlignment="Center" Margin="5 2" />
+                    <TextBlock Text="Cancel" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>

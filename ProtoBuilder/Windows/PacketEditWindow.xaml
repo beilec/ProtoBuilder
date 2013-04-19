@@ -40,13 +40,13 @@
                     <TextBlock Text="OK" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="BtnCancel" HorizontalAlignment="Right" Padding="5 2" Grid.Column="1" Margin="5"
+            <!--<Button x:Name="BtnCancel" HorizontalAlignment="Right" Padding="5 2" Grid.Column="1" Margin="5"
                     Click="BtnCancel_OnClick">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="../Resources/cancel.png" Height="16" VerticalAlignment="Center" Margin="5 2" />
                     <TextBlock Text="Cancel" VerticalAlignment="Center"/>
                 </StackPanel>
-            </Button>
+            </Button>-->
         </Grid>
     </Grid>
 </Window>

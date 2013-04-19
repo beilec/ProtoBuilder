@@ -30,48 +30,78 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Border BorderThickness="0" BorderBrush="White" Margin="5 0 5 0">
-                    <Border BorderThickness="0" BorderBrush="DimGray">
-                        <Grid Margin="0 0 3 0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Protocol" Margin="5 2" VerticalAlignment="Center" />
-                            <ComboBox x:Name="CbProtocols" ItemTemplate="{StaticResource ProtocolTemplate}" Grid.Column="1" Margin="2" VerticalAlignment="Center"/>
-                            <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center">
-                                <Button Padding="2 -4" Height="21" ToolTip="Add protocol from file">
-                                    <Image Source="../Resources/open.png" Height="16"/>
-                                </Button>
-                                <Button Padding="2 -4" Height="21" ToolTip="Add new protocol" Margin="1 0">
-                                    <Image Source="../Resources/add.png" Height="16"/>
-                                </Button>
-                            </StackPanel>
-                        </Grid>
+                <GroupBox Header="Protocols" BorderBrush="Silver" BorderThickness="1" Margin="5 0">
+                    <Border BorderThickness="0" BorderBrush="White" Margin="5 0 5 0">
+                        <Border BorderThickness="0" BorderBrush="DimGray">
+                            <Grid Margin="0 0 3 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Protocol" Margin="5 2" VerticalAlignment="Center" />
+                                <ComboBox x:Name="CbProtocols" ItemTemplate="{StaticResource ProtocolTemplate}" Grid.Column="1" Margin="2" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                    <Button Padding="2 -4" Height="21" ToolTip="Add new protocol" Margin="1 0"
+                                        Click="BtnCreateProtocol_OnClick">
+                                        <Image Source="../Resources/add.png" Height="16"/>
+                                    </Button>
+                                    <Button x:Name="BtnRemoveProtocol" Padding="2 -4" Height="21" 
+                                        ToolTip="Remove protocol" Margin="1 0"
+                                        IsEnabled="False"
+                                        Click="BtnRemoveProtocol_OnClick">
+                                        <Image Source="../Resources/remove.png" Height="16"/>
+                                    </Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Button x:Name="BtnEditProtocol" Padding="2 -4" Height="21" ToolTip="Edit protocol" Margin="1 0" IsEnabled="False"
+                                        Click="BtnEditProtocol_OnClick">
+                                        <Image Source="../Resources/properties.png" Height="16"/>
+                                    </Button>
+                                    <Button Padding="2 -4" Height="21" ToolTip="Open..."
+                                            Click="BtnLoadProtocols_OnClick">
+                                        <Image Source="../Resources/open.png" Height="16"/>
+                                    </Button>
+                                    <Button Padding="2 -4" Height="21" ToolTip="Save" Margin="1 0"
+                                            Click="BtnSaveProtocols_OnClick">
+                                        <Image Source="../Resources/save.png" Height="16"/>
+                                    </Button>
+                                    <Button Padding="2 -4" Height="21" ToolTip="Save As..." Margin="1 0"
+                                            Click="BtnSaveProtocols_OnClick">
+                                        <Image Source="../Resources/saveas.png" Height="16"/>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
                     </Border>
-                </Border>
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center">
-                        <Button x:Name="BtnAddPacket" Padding="2 -4" Height="21" 
+                </GroupBox>
+                <GroupBox Header="Packets" Grid.Row="1" Margin="5 5 5 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" Margin="5 0">
+                            <Button x:Name="BtnAddPacket" Padding="2 -4" Height="21" 
                                         IsEnabled="False"
                                         ToolTip="Add packet in protocol" 
                                         Click="BtnAddPacket_OnClick">
-                            <Image Source="../Resources/add.png" Height="16"/>
-                        </Button>
-                        <Button x:Name="BtnRemovePacket" Padding="2 -4" Height="21" 
+                                <Image Source="../Resources/add.png" Height="16"/>
+                            </Button>
+                            <Button x:Name="BtnRemovePacket" Padding="2 -4" Height="21" 
                                         ToolTip="Remove packet from protocol" Margin="1 0"
                                         IsEnabled="False"
                                         Click="BtnRemovePacket_OnClick">
-                            <Image Source="../Resources/remove.png" Height="16"/>
-                        </Button>
-                    </StackPanel>
-                    <ListBox x:Name="LbPackets" ItemTemplate="{StaticResource PacketTemplate}" Margin="5 0 5 5" Grid.Row="1"/>
-                </Grid>
+                                <Image Source="../Resources/remove.png" Height="16"/>
+                            </Button>
+                        </StackPanel>
+                        <ListBox x:Name="LbPackets" ItemTemplate="{StaticResource PacketTemplate}" Margin="5 0 5 5" Grid.Row="1"/>
+                    </Grid>
+                </GroupBox>
             </Grid>
             <GridSplitter Width="5" ResizeDirection="Columns" ShowsPreview="False" Background="{StaticResource SplitterBackground}"/>
             <TabControl Grid.Column="1" Background="Transparent">
@@ -87,26 +117,55 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Grid Margin="5">
+                        <ContentControl x:Name="CcPacket">
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate DataType="model:Packet">
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Name" HorizontalAlignment="Right" Margin="5 2" VerticalAlignment="Center" />
+                                        <TextBox Text="{Binding Path=Name}" Grid.Column="1" Margin="5 2" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Description" HorizontalAlignment="Right" Margin="5 2" Grid.Row="1" VerticalAlignment="Center" />
+                                        <TextBox Text="{Binding Path=Description}" Grid.Column="1" Margin="5 2" Grid.Row="1" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+                        </ContentControl>
+                        <Grid Grid.Row="1" Margin="5 0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
-                                <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Name" HorizontalAlignment="Right" Margin="5 2" VerticalAlignment="Center" />
-                            <TextBox Text="{Binding Path=Name}" Grid.Column="1" Margin="5 2" VerticalAlignment="Center"/>
-                            <TextBlock Text="Description" HorizontalAlignment="Right" Margin="5 2" Grid.Row="1" VerticalAlignment="Center" />
-                            <TextBox Text="{Binding Path=Description}" Grid.Column="1" Margin="5 2" Grid.Row="1" VerticalAlignment="Center"/>
-                            <TextBlock Text="Packet Type" HorizontalAlignment="Right" Margin="5 2" Grid.Row="2" VerticalAlignment="Center" />
-                            <ComboBox x:Name="CbPacketType" SelectedItem="{Binding Path=PacketType}" Grid.Column="1" Margin="5 2" Grid.Row="2" VerticalAlignment="Center"/>
+                            <TextBlock Text="Packet Type" HorizontalAlignment="Right" Margin="5 2" VerticalAlignment="Center" />
+                            <ComboBox x:Name="CbPacketType" SelectedItem="{Binding Path=PacketType}" Grid.Column="1" Margin="5 2 10 2"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <TextBlock Text="Packet size" HorizontalAlignment="Right" Margin="5 2" Grid.Row="1" VerticalAlignment="Center" />
+                            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Margin="5 2 10 2">
+                                <TextBox x:Name="TxtPacketSize" IsReadOnly="True" IsReadOnlyCaretVisible="False" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <Button x:Name="BtnRecalcPacketType" Padding="2 -4" Height="21"
+                                        Visibility="Collapsed"
+                                        Click="BtnRecalcPacketSize_OnClick">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="../Resources/recalc.png" Height="16"/>
+                                        <TextBlock Text="Recalc packet size" Margin="5 0" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
                         </Grid>
-                        <Grid Margin="5" Grid.Row="1">
+                        <Grid Margin="5" Grid.Row="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition Height="Auto"/>
@@ -130,11 +189,35 @@
                                         <Image Source="../Resources/remove.png" Height="16"/>
                                     </Button>
                                 </StackPanel>
-                                <ListBox x:Name="LbSegments" ItemTemplate="{StaticResource SegmentTemplate}" 
-                                     SelectionMode="Extended"
-                                     Margin="0 0 0 5" Grid.Row="1"/>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ListBox x:Name="LbSegments" ItemTemplate="{StaticResource SegmentTemplate}" 
+                                         SelectionMode="Extended"
+                                         Margin="0 0 0 5"/>
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Button x:Name="BtnSegmentPrevPosition" Grid.Row="1" Margin="1" IsEnabled="False"
+                                                ToolTip="Prev position"
+                                                Click="BtnSegmentPrevPosition_OnClick">
+                                            <Image Source="../Resources/up.png" Height="16"/>
+                                        </Button>
+                                        <Button x:Name="BtnSegmentNextPosition" Grid.Row="2" Margin="1" IsEnabled="False"
+                                                ToolTip="Next position"
+                                                Click="BtnSegmentNextPosition_OnClick">
+                                            <Image Source="../Resources/down.png" Height="16"/>
+                                        </Button>
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                            <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Bottom" ResizeDirection="Rows" Height="5" Background="{StaticResource SplitterBackground}"/>
+                            <!--<GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Bottom" ResizeDirection="Rows" Height="5" Background="{StaticResource SplitterBackground}"/>-->
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -159,10 +242,24 @@
                                         ItemTemplate="{StaticResource DataTypeTemplate}"
                                         Grid.Column="1" Grid.Row="2" Margin="2" HorizontalAlignment="Left"/>
                                 <TextBlock Text="Size" HorizontalAlignment="Right" Grid.Row="3" Margin="0 2 10 2" VerticalAlignment="Center"/>
-                                <TextBox x:Name="TxtSegmentSize" Text="{Binding Path=Size}" Grid.Column="1" Grid.Row="3" Margin="2" Width="30" HorizontalAlignment="Left"/>
+                                <TextBox x:Name="TxtSegmentSize" Text="{Binding Path=Size}" 
+                                                    TextChanged="TxtSegmentSize_OnTextChanged"
+                                                    Grid.Column="1" Grid.Row="3" Margin="2" Width="30" 
+                                                    HorizontalAlignment="Left"/>
                             </Grid>
                         </Grid>
                     </Grid>
+                </TabItem>
+                <TabItem>
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="../Resources/action.png" Margin="0 0 5 0"/>
+                                <TextBlock Text="Actions"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+
                 </TabItem>
             </TabControl>
         </Grid>

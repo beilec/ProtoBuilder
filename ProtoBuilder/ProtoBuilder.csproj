@@ -60,8 +60,12 @@
     </ApplicationDefinition>
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\ProtocolController.cs" />
+    <Compile Include="Utils\Core.cs" />
     <Compile Include="Windows\PacketEditWindow.xaml.cs">
       <DependentUpon>PacketEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ProtocolPropertiesWindow.xaml.cs">
+      <DependentUpon>ProtocolPropertiesWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Dictionary\DataTemplates.xaml">
       <SubType>Designer</SubType>
@@ -89,6 +93,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Windows\PacketEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ProtocolPropertiesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -153,6 +161,27 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\protocol.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\recalc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\properties.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\action.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\saveas.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
