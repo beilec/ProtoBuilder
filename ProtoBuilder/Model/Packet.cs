@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace ProtoBuilder.Model {
     public class Packet {
@@ -8,6 +9,20 @@ namespace ProtoBuilder.Model {
         public string Name { get; set; }
         public string Description { get; set; }
         public PacketType PacketType { get; set; }
+        public string PacketTypeLabel {
+            get {
+                return PacketType == PacketType.Request
+                           ? "RQV"
+                           : "RCV";
+            }
+        }
+        public SolidColorBrush PacketTypeColor {
+            get {
+                return PacketType == PacketType.Request
+                           ? new SolidColorBrush {Color = Colors.Red}
+                           : new SolidColorBrush {Color = Colors.Blue};
+            }
+        }
         //  Segments collection
         public List<Segment> Segments { get; set; }
         public uint Size {

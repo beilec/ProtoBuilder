@@ -5,6 +5,7 @@
         WindowStyle="ToolWindow"
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
+        FontSize="13" FontFamily="/ProtoBuilder;component/Resources/Fonts/#Cuprum"
         Background="LightGray">
     <Grid>
         <Grid.RowDefinitions>

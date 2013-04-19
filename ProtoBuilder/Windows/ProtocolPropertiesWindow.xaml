@@ -4,6 +4,7 @@
         Title="Protocol properties"
         SizeToContent="WidthAndHeight"
         WindowStyle="ToolWindow"
+        FontSize="13" FontFamily="/ProtoBuilder;component/Resources/Fonts/#Cuprum"
         Background="LightGray">
     <Grid>
         <Grid.RowDefinitions>

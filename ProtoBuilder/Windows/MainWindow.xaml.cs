@@ -53,6 +53,12 @@ namespace ProtoBuilder.Windows {
 
         private void CbPacketTypeOnSelectionChanged(object sender, SelectionChangedEventArgs e) {
             CurrentPacket.PacketType = (PacketType) CbPacketType.SelectedItem;
+            var index = LbPackets.SelectedIndex;
+            var segIndex = LbSegments.SelectedIndex;
+            LbPackets.ItemsSource = null;
+            LbPackets.ItemsSource = CurrentProtocol.Packets;
+            LbPackets.SelectedIndex = index;
+            LbSegments.SelectedIndex = segIndex;
         }
 
         private void LbPacketsOnKeyUp(object sender, KeyEventArgs e) {
@@ -106,6 +112,7 @@ namespace ProtoBuilder.Windows {
         }
 
         private void CbDataTypeOnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (CurrentSegment == null) return;
             if (CbDataType.SelectedIndex == -1) return;
             CurrentSegment.Type = (DataTypeView) CbDataType.SelectedItem;
             var fixedSize = DataTypeView.SizeOfType(CurrentSegment.Type.Type);
@@ -371,9 +378,9 @@ namespace ProtoBuilder.Windows {
         }
 
         private void BtnCreateProtocol_OnClick(object sender, RoutedEventArgs e) {
-            var protocolsCount = CbProtocols.Items.Count;
+            var protocolsCount = ProtocolController.Protocols.Count;
             ProtocolController.CreateProtocol();
-            if (CbProtocols.Items.Count <= protocolsCount) return;
+            if (ProtocolController.Protocols.Count <= protocolsCount) return;
             CbProtocols.ItemsSource = null;
             CbProtocols.ItemsSource = ProtocolController.Protocols;
             CbProtocols.SelectedIndex = CbProtocols.Items.Count - 1;
@@ -385,6 +392,13 @@ namespace ProtoBuilder.Windows {
 
         private void BtnSaveProtocols_OnClick(object sender, RoutedEventArgs e) {
             ProtocolController.SaveProtocols(ProtocolController);
+            BtnSaveProtocols.ToolTip = string.Format(@"Save {0}", ProtocolController.FileName);
+        }
+
+        private void BtnSaveAsProtocols_OnClick(object sender, RoutedEventArgs e) {
+            ProtocolController.FileName = "";
+            ProtocolController.SaveProtocols(ProtocolController);
+            BtnSaveProtocols.ToolTip = string.Format(@"Save {0}", ProtocolController.FileName);
         }
 
         private void BtnLoadProtocols_OnClick(object sender, RoutedEventArgs e) {
@@ -394,6 +408,7 @@ namespace ProtoBuilder.Windows {
             CbProtocols.ItemsSource = ProtocolController.Protocols;
             if (CbProtocols.Items.Count > 0)
                 CbProtocols.SelectedIndex = 0;
+            BtnSaveProtocols.ToolTip = string.Format(@"Save {0}", ProtocolController.FileName);
         }
 
         private void BtnRemoveProtocol_OnClick(object sender, RoutedEventArgs e) {
@@ -404,6 +419,11 @@ namespace ProtoBuilder.Windows {
             CbProtocols.ItemsSource = ProtocolController.Protocols;
             if (CbProtocols.Items.Count > 0)
                 CbProtocols.SelectedIndex = 0;
+        }
+
+        private void BtnAboutUs_OnClick(object sender, RoutedEventArgs e) {
+            var dlg = new AboutUsWindow();
+            dlg.ShowDialog();
         }
     }
 }

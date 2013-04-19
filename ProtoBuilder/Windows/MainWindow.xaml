@@ -58,6 +58,10 @@
                                     </Button>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Button x:Name="BtnAboutUs" Padding="2 -4" Height="21" ToolTip="About us..." Margin="1 0"
+                                        Click="BtnAboutUs_OnClick">
+                                        <Image Source="../Resources/info.png" Height="16"/>
+                                    </Button>
                                     <Button x:Name="BtnEditProtocol" Padding="2 -4" Height="21" ToolTip="Edit protocol" Margin="1 0" IsEnabled="False"
                                         Click="BtnEditProtocol_OnClick">
                                         <Image Source="../Resources/properties.png" Height="16"/>
@@ -66,12 +70,12 @@
                                             Click="BtnLoadProtocols_OnClick">
                                         <Image Source="../Resources/open.png" Height="16"/>
                                     </Button>
-                                    <Button Padding="2 -4" Height="21" ToolTip="Save" Margin="1 0"
+                                    <Button x:Name="BtnSaveProtocols" Padding="2 -4" Height="21" ToolTip="Save" Margin="1 0"
                                             Click="BtnSaveProtocols_OnClick">
                                         <Image Source="../Resources/save.png" Height="16"/>
                                     </Button>
                                     <Button Padding="2 -4" Height="21" ToolTip="Save As..." Margin="1 0"
-                                            Click="BtnSaveProtocols_OnClick">
+                                            Click="BtnSaveAsProtocols_OnClick">
                                         <Image Source="../Resources/saveas.png" Height="16"/>
                                     </Button>
                                 </StackPanel>

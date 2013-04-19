@@ -1,0 +1,28 @@
+﻿<Window x:Class="ProtoBuilder.Windows.AboutUsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About Proto Builder" Height="154" Width="422"
+        Background="LightGray"
+        ResizeMode="NoResize"
+        FontSize="13" FontFamily="/ProtoBuilder;component/Resources/Fonts/#Cuprum"
+        WindowStyle="ToolWindow">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Proto Builder is program as Open Source" HorizontalAlignment="Center"/>
+            <TextBlock Text="Permitted only free distribution, without the possibility of selling" HorizontalAlignment="Center"/>
+            <TextBlock Text="The program source code is also available in a public repository in github.com:" HorizontalAlignment="Center" Margin="0 10 0 0"/>
+            <TextBlock HorizontalAlignment="Center">
+                <Hyperlink x:Name="Link" NavigateUri="https://github.com/perfectdev/ProtoBuilder" Click="Hyperlink_OnClick">https://github.com/perfectdev/ProtoBuilder</Hyperlink>
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">
+                Developed by <Hyperlink x:Name="Linkpdev" NavigateUri="https://github.com/perfectdev" Click="Linkpdev_OnClick">pdev</Hyperlink> © 2013
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</Window>

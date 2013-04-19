@@ -15,6 +15,10 @@ namespace ProtoBuilder.Controllers {
         [XmlIgnore]
         public string FileName { get; set; }
 
+        public ProtocolController() {
+            Protocols = new List<Protocol>();
+        }
+
         public Segment AddSegment(Packet currentPacket) {
             var segment = new Segment {
                 Name = "",
@@ -92,6 +96,7 @@ namespace ProtoBuilder.Controllers {
                 Name = "New protocol",
                 Packets = new List<Packet>()
             };
+            Protocols = Protocols ?? new List<Protocol>();
             var window = new ProtocolPropertiesWindow(protocol);
             var showDialog = window.ShowDialog();
             if (showDialog != null && (bool) showDialog)

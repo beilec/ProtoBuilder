@@ -14,7 +14,9 @@
     <HierarchicalDataTemplate x:Key="PacketTemplate" DataType="model:Packet">
         <StackPanel Orientation="Horizontal">
             <Image Source="../packet.png" Margin="0 2 5 2" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Path=PacketTypeLabel}" Foreground="{Binding Path=PacketTypeColor}" VerticalAlignment="Center" Margin="5 0"/>
             <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding Path=Description}" Foreground="Silver" VerticalAlignment="Center" Margin="5 0"/>
         </StackPanel>
     </HierarchicalDataTemplate>
 
