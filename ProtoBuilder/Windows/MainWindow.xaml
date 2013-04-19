@@ -4,7 +4,7 @@
         Title="Proto Builder" 
         Icon="logo.ico"
         Background="LightGray"
-        Height="600" Width="800" FontSize="13" FontFamily="/ProtoBuilder;component/Resources/Fonts/#Cuprum">
+        Height="600" Width="675" FontSize="13" FontFamily="/ProtoBuilder;component/Resources/Fonts/#Cuprum">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -22,7 +22,7 @@
         </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="300"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid>
@@ -250,6 +250,9 @@
                         </Grid>
                     </Grid>
                 </TabItem>
+            </TabControl>
+<!--            <GridSplitter Width="5" ResizeDirection="Columns" ShowsPreview="False" Background="{StaticResource SplitterBackground}" Grid.Column="1"/>
+            <TabControl Grid.Column="2" Background="LightGray">
                 <TabItem>
                     <TabItem.HeaderTemplate>
                         <DataTemplate>
@@ -259,9 +262,9 @@
                             </StackPanel>
                         </DataTemplate>
                     </TabItem.HeaderTemplate>
-
+                    
                 </TabItem>
-            </TabControl>
+            </TabControl>-->
         </Grid>
     </Grid>
 </Window>
