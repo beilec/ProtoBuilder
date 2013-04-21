@@ -12,6 +12,7 @@ namespace ProtoBuilder.Model {
         public string Name { get; set; }
         public string Description { get; set; }
         public DataTypeView Type { get; set; }
+        public bool IsLittleEndian { get; set; }
         public static List<DataTypeView> GetDataTypes() { 
             return (from object value in Enum.GetValues(typeof (DataType))
                     select new DataTypeView {

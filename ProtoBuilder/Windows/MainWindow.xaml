@@ -4,7 +4,7 @@
         Title="Proto Builder" 
         Icon="logo.ico"
         Background="LightGray"
-        Height="600" Width="735" FontSize="13" FontFamily="/ProtoBuilder;component/Resources/Fonts/#Cuprum">
+        Height="600" Width="675" FontSize="13" FontFamily="/ProtoBuilder;component/Resources/Fonts/#Cuprum">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -240,11 +240,14 @@
                                 <TextBlock Text="Description" HorizontalAlignment="Right" Grid.Row="1" Margin="0 2 10 2" VerticalAlignment="Center"/>
                                 <TextBox x:Name="TxtSegmentDesc" Text="{Binding Path=Description}" Grid.Column="1" Grid.Row="1" Margin="2"/>
                                 <TextBlock Text="Type" HorizontalAlignment="Right" Grid.Row="2" Margin="0 2 10 2" VerticalAlignment="Center"/>
-                                <ComboBox x:Name="CbDataType"
-                                          ItemsSource="{Binding Path=DataTypes}" 
-                                          SelectedValue="{Binding Path=Type, Mode=TwoWay}"
-                                          ItemTemplate="{StaticResource DataTypeTemplate}"
-                                          Grid.Column="1" Grid.Row="2" Margin="2" HorizontalAlignment="Left"/>
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+                                    <ComboBox x:Name="CbDataType"
+                                              ItemsSource="{Binding Path=DataTypes}" 
+                                              SelectedValue="{Binding Path=Type, Mode=TwoWay}"
+                                              ItemTemplate="{StaticResource DataTypeTemplate}"
+                                              Margin="2" HorizontalAlignment="Left"/>
+                                    <CheckBox x:Name="ChkIsLittleEndian" Checked="ChkIsLittleEndian_OnChecked" Unchecked="ChkIsLittleEndian_OnUnchecked" Content="Is Little Endian" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" Margin="5 0"/>
+                                </StackPanel>
                                 <TextBlock Text="Size" HorizontalAlignment="Right" Grid.Row="3" Margin="0 2 10 2" VerticalAlignment="Center"/>
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3">
                                     <TextBox x:Name="TxtSegmentSize" Text="{Binding Path=Size}" 

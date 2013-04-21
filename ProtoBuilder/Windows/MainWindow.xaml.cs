@@ -164,6 +164,7 @@ namespace ProtoBuilder.Windows {
                 TxtSegmentDesc.Text = CurrentSegment.Description;
                 CbDynamicSize.Visibility = CurrentSegment.IsDynamicSize;
                 BtnClearDynamicSize.Visibility = CurrentSegment.IsDynamicSize;
+                ChkIsLittleEndian.IsChecked = CurrentSegment.IsLittleEndian;
                 var i = -1;
                 foreach (DataTypeView item in CbDataType.ItemsSource) {
                     i++;
@@ -452,6 +453,14 @@ namespace ProtoBuilder.Windows {
             CurrentSegment.DynamicSizeSegment = Guid.Empty;
             TxtSegmentSize.IsEnabled = true;
             RefreshSegmentList();
+        }
+
+        private void ChkIsLittleEndian_OnChecked(object sender, RoutedEventArgs e) {
+            if (CurrentSegment != null) CurrentSegment.IsLittleEndian = true;
+        }
+
+        private void ChkIsLittleEndian_OnUnchecked(object sender, RoutedEventArgs e) {
+            if (CurrentSegment != null) CurrentSegment.IsLittleEndian = false;
         }
     }
 }
