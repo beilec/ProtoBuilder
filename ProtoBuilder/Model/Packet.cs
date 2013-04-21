@@ -31,6 +31,20 @@ namespace ProtoBuilder.Model {
         public static List<PacketType> GetPacketTypes() {
             return Enum.GetValues(typeof (PacketType)).Cast<PacketType>().ToList();
         }
+        //  Возвращает коллекцию подходящих для определения размера сегментов
+        public List<Segment> DynamicSizeSegments {
+            get {
+                return Segments.Where(
+                    segment => 
+                        segment.Type.Type == DataType.Byte || 
+                        segment.Type.Type == DataType.Int16 || 
+                        segment.Type.Type == DataType.Int32 ||
+                        segment.Type.Type == DataType.Int64 ||
+                        segment.Type.Type == DataType.UInt16 ||
+                        segment.Type.Type == DataType.UInt32 || 
+                        segment.Type.Type == DataType.UInt64).ToList();
+            }
+        } 
 
         public int  MoveSegment2PrevPosition(Segment segment) {
             var orderId = -1;

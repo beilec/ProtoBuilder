@@ -47,6 +47,7 @@ namespace ProtoBuilder.Windows {
             TxtSegmentSize.TextChanged += TxtSizeOnTextChanged;
             TxtSegmentSize.LostFocus += TxtSegmentSizeOnLostFocus;
             CbPacketType.SelectionChanged += CbPacketTypeOnSelectionChanged;
+            CbDynamicSize.DropDownClosed += CbDynamicSizeOnDropDownClosed;
             InitTimer();
             //  Конец говно-кода
         }
@@ -156,9 +157,13 @@ namespace ProtoBuilder.Windows {
 
         private void LbSegmentsOnSelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (e.AddedItems.Count > 0) {
+                CbDynamicSize.ItemsSource = null;
+                CbDynamicSize.ItemsSource = CurrentPacket.DynamicSizeSegments;
                 CurrentSegment = (Segment) e.AddedItems[0];
                 TxtSegmentName.Text = CurrentSegment.Name;
                 TxtSegmentDesc.Text = CurrentSegment.Description;
+                CbDynamicSize.Visibility = CurrentSegment.IsDynamicSize;
+                BtnClearDynamicSize.Visibility = CurrentSegment.IsDynamicSize;
                 var i = -1;
                 foreach (DataTypeView item in CbDataType.ItemsSource) {
                     i++;
@@ -166,7 +171,15 @@ namespace ProtoBuilder.Windows {
                     CbDataType.SelectedIndex = i;
                     break;
                 }
+                i = -1;
+                foreach (Segment item in CbDynamicSize.ItemsSource) {
+                    i++;
+                    if (item.Id != CurrentSegment.DynamicSizeSegment) continue;
+                    CbDynamicSize.SelectedIndex = i;
+                    break;
+                }
                 TxtSegmentSize.Text = CurrentSegment.Size.ToString(CultureInfo.InvariantCulture);
+                TxtSegmentSize.IsEnabled = CurrentSegment.DynamicSizeSegment == Guid.Empty;
                 BtnRemoveSegment.IsEnabled = true;
                 BtnSegmentPrevPosition.IsEnabled = true;
                 BtnSegmentNextPosition.IsEnabled = true;
@@ -424,6 +437,21 @@ namespace ProtoBuilder.Windows {
         private void BtnAboutUs_OnClick(object sender, RoutedEventArgs e) {
             var dlg = new AboutUsWindow();
             dlg.ShowDialog();
+        }
+
+        private void CbDynamicSizeOnDropDownClosed(object sender, EventArgs eventArgs) {
+            if (CbDynamicSize.SelectedIndex == -1) return;
+            CurrentSegment.DynamicSizeSegment = ((Segment) CbDynamicSize.SelectedItem).Id;
+            CurrentSegment.Size = 0;
+            TxtSegmentSize.IsEnabled = false;
+            RefreshSegmentList();
+        }
+
+        private void BtnClearDynamicSize_OnClick(object sender, RoutedEventArgs e) {
+            CbDynamicSize.SelectedIndex = -1;
+            CurrentSegment.DynamicSizeSegment = Guid.Empty;
+            TxtSegmentSize.IsEnabled = true;
+            RefreshSegmentList();
         }
     }
 }

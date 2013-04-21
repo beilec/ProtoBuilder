@@ -18,6 +18,8 @@ namespace ProtoBuilder.Model {
                     case DataType.UInt32: ret = new SolidColorBrush(Colors.DarkBlue); break;
                     case DataType.UInt64: ret = new SolidColorBrush(Colors.DarkBlue); break;
                     case DataType.String: ret = new SolidColorBrush(Colors.Red); break;
+                    case DataType.Float: ret = new SolidColorBrush(Colors.MediumSlateBlue); break;
+                    case DataType.Decimal: ret = new SolidColorBrush(Colors.RoyalBlue); break;
                 }
                 return ret;
             }
@@ -36,6 +38,8 @@ namespace ProtoBuilder.Model {
                 case DataType.UInt16: ret = 2; break;
                 case DataType.UInt32: ret = 4; break;
                 case DataType.UInt64: ret = 8; break;
+                case DataType.Float: ret = 4; break;
+                case DataType.Decimal: ret = 16; break;
             }
 
             return ret;

@@ -4,7 +4,7 @@
         Title="Proto Builder" 
         Icon="logo.ico"
         Background="LightGray"
-        Height="600" Width="675" FontSize="13" FontFamily="/ProtoBuilder;component/Resources/Fonts/#Cuprum">
+        Height="600" Width="735" FontSize="13" FontFamily="/ProtoBuilder;component/Resources/Fonts/#Cuprum">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -241,15 +241,26 @@
                                 <TextBox x:Name="TxtSegmentDesc" Text="{Binding Path=Description}" Grid.Column="1" Grid.Row="1" Margin="2"/>
                                 <TextBlock Text="Type" HorizontalAlignment="Right" Grid.Row="2" Margin="0 2 10 2" VerticalAlignment="Center"/>
                                 <ComboBox x:Name="CbDataType"
-                                        ItemsSource="{Binding Path=DataTypes}" 
-                                        SelectedValue="{Binding Path=Type, Mode=TwoWay}"
-                                        ItemTemplate="{StaticResource DataTypeTemplate}"
-                                        Grid.Column="1" Grid.Row="2" Margin="2" HorizontalAlignment="Left"/>
+                                          ItemsSource="{Binding Path=DataTypes}" 
+                                          SelectedValue="{Binding Path=Type, Mode=TwoWay}"
+                                          ItemTemplate="{StaticResource DataTypeTemplate}"
+                                          Grid.Column="1" Grid.Row="2" Margin="2" HorizontalAlignment="Left"/>
                                 <TextBlock Text="Size" HorizontalAlignment="Right" Grid.Row="3" Margin="0 2 10 2" VerticalAlignment="Center"/>
-                                <TextBox x:Name="TxtSegmentSize" Text="{Binding Path=Size}" 
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3">
+                                    <TextBox x:Name="TxtSegmentSize" Text="{Binding Path=Size}" 
                                                     TextChanged="TxtSegmentSize_OnTextChanged"
-                                                    Grid.Column="1" Grid.Row="3" Margin="2" Width="30" 
+                                                     Margin="2" Width="30" 
                                                     HorizontalAlignment="Left"/>
+                                    <ComboBox x:Name="CbDynamicSize"
+                                              SelectedValue="{Binding Path=DynamicSizeSegment}"
+                                              ItemTemplate="{StaticResource SegmentTemplate}"
+                                              Visibility="Collapsed"
+                                              Margin="2"/>
+                                    <Button x:Name="BtnClearDynamicSize" 
+                                            Content="Remove dynamic size" Margin="2" Padding="5 0" 
+                                            Visibility="Collapsed"
+                                            Click="BtnClearDynamicSize_OnClick" />
+                                </StackPanel>
                             </Grid>
                         </Grid>
                     </Grid>

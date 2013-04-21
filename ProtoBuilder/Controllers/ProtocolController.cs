@@ -12,6 +12,7 @@ namespace ProtoBuilder.Controllers {
     public class ProtocolController : Controller {
         [XmlElement(Namespace = "name.pdev.ProtoBuilder.Protocols", ElementName = "Protocol")]
         public List<Protocol> Protocols { get; set; }
+
         [XmlIgnore]
         public string FileName { get; set; }
 
